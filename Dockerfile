@@ -9,4 +9,4 @@ WORKDIR /etc/nginx/conf.d
 COPY ./default.conf .
 
 # we open the port 80
-EXPOSE 80
+EXPOSE 8080
