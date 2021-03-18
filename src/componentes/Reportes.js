@@ -2,6 +2,7 @@ import CanvasJSReact from '../canvasjs.react';
 import Table from './Table';
 import React, { Component } from 'react'; 
 //import './App.css';
+
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -51,7 +52,7 @@ export default class Reportes extends Component {
         }
       
         updateChart() {
-        fetch('http://35.222.55.115:8080/ram').then((res)=>{
+        fetch("http://35.222.55.115:8080/ram").then((res)=>{
           res.json().then((result)=>{
             dps.push({x: xVal*3,y: result.uso});
             xVal++;
@@ -67,7 +68,7 @@ export default class Reportes extends Component {
         }
     
       updateChart2() {
-        fetch('http://35.222.55.115:8080/ram').then((res)=>{
+        fetch("http://35.222.55.115:8080/ram").then((res)=>{
           res.json().then((result)=>{
             for(let i = 0; i <= dpsp.length ; i++)
             {
@@ -83,7 +84,7 @@ export default class Reportes extends Component {
     
       updateTable(){
     
-        fetch('http://35.222.55.115:8080/procesos').then((res)=>{
+        fetch("http://35.222.55.115:8080/procesos").then((res)=>{
           res.json().then((result)=>{
             let stringify = JSON.parse(JSON.stringify(result))
             this.child1.current.removeRow();
