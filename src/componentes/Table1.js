@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import TableRow from './TableRow';
+import TableRow from './TableRow1';
 
-class Table extends Component{
+class Table1 extends Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -39,16 +39,25 @@ class Table extends Component{
     agregar_datos = (array) => {
         if(array.length > 0)
         {
-            console.log("ingreso");
             for(var aux of array)
-                this.addRow(aux);
+            {
+                var temp = {
+                    Paciente: aux.name,
+                    Edad: aux.age,
+                    Ubicacion: aux.location,
+                    Tipo: aux.infectedtype,
+                    Estado: aux.state
+                };
+                this.addRow(temp);
+            }
+
         }
 	}
 
     render() {
         return (
             <div>
-                <table className="table table-hover">
+                <table className="table table-bordered">
                 <thead><tr className="table-primary">{this.getHeader()}</tr></thead>
                     <tbody>
                         {
@@ -62,4 +71,4 @@ class Table extends Component{
     }
 }
 
-export default Table
+export default Table1;
