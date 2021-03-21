@@ -14,6 +14,14 @@ import Data from './componentes/Data'
 
 import Metricas from './componentes/Metricas'
 
+import Top from './componentes/Top'
+
+import ChartContainer from './componentes/Funel'
+
+import Type  from './componentes/Type'
+
+
+
 function App() {
   return (
     <Router>
@@ -21,6 +29,10 @@ function App() {
       <Route path="/repo"     exact component = {Reportes}/>
       <Route path="/data"     exact component = {Data}/>
       <Route path="/metricas" exact component = {Metricas}/>
+      <Route path="/top"      exact component = {Top}/>
+      <Route path="/type"      exact component = {Type}/>
+      <Route path="/funel"    exact component = {ChartContainer}/>
+
     </Router>
   );
 }

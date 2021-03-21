@@ -36,6 +36,22 @@ export default class Navegacion extends Component {
                             Metricas
                         </Link>
                     </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/top">
+                            Top
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/funel">
+                            Funel
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/type">
+                           Infectedtype
+                        </Link>
+                    </li>
+
 
                 </ul>
                 </div>

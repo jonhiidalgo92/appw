@@ -51,8 +51,8 @@ export default class Reportes extends Component {
             setInterval(this.updateTable, 3000);
         }
       
-        updateChart() {
-        fetch("http://35.222.55.115:8080/ram").then((res)=>{
+        async updateChart() {
+        await fetch("http://35.222.55.115:8080/ram").then((res)=>{
           res.json().then((result)=>{
             dps.push({x: xVal*3,y: result.uso});
             xVal++;
@@ -62,13 +62,16 @@ export default class Reportes extends Component {
             this.chart.render();
             //this.setState({users:result})
           })
+
         })
     
     
         }
     
-      updateChart2() {
-        fetch("http://35.222.55.115:8080/ram").then((res)=>{
+        
+
+        async updateChart2() {
+        await fetch("http://35.222.55.115:8080/ram").then((res)=>{
           res.json().then((result)=>{
             for(let i = 0; i <= dpsp.length ; i++)
             {
@@ -79,12 +82,13 @@ export default class Reportes extends Component {
             this.chart2.render();
             //this.setState({users:result})
           })
+          
         })
         }
     
-      updateTable(){
+      async updateTable(){
     
-        fetch("http://35.222.55.115:8080/procesos").then((res)=>{
+        await fetch("http://35.222.55.115:8080/procesos").then((res)=>{
           res.json().then((result)=>{
             let stringify = JSON.parse(JSON.stringify(result))
             this.child1.current.removeRow();
@@ -93,10 +97,8 @@ export default class Reportes extends Component {
             //this.setState({users:result})
           })
         })
-    
-    
       }
-    
+
       render () {
         const options_d = {
                 animationEnabled: true,
