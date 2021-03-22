@@ -10,8 +10,6 @@ import Navegacion from './componentes/Navegacion'
 
 import Reportes from './componentes/Reportes'
 
-import Data from './componentes/Data'
-
 import Datos from './componentes/Datos'
 
 import Metricas from './componentes/Metricas'

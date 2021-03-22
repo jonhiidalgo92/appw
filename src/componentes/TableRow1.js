@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+
+
 class TableRow1 extends Component{
     constructor(props) {
         super(props);
@@ -24,17 +26,21 @@ class TableRow1 extends Component{
     }
 
     render() {
+
         return (
             <tr>
                 {this.getRowsData()}
             </tr>
         )
     }
+
 }
 
 const RenderRow = (props) =>{
     return props.keys.map((key, index)=>{
-    return <td key={props.data[key]}>{props.data[key]}</td>
+        if(props.data[key] === 'asymptomatic') return <td key={props.data[key]}><span className="badge badge-warning">{props.data[key]}</span></td>
+        if(props.data[key] === 'symptomatic') return <td key={props.data[key]}><span className="badge badge-danger">{props.data[key]}</span></td>
+        return <td key={props.data[key]}>{props.data[key]}</td>
     })
 }
 export default TableRow1;

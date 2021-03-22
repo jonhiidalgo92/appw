@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import TableRow from './TableRow1';
+import TableRow1 from './TableRow1';
 
 class Table1 extends Component{
     constructor(props) {
@@ -28,10 +28,14 @@ class Table1 extends Component{
         this.setState({rows})
     }
 
+    removeRows = () =>
+    {
+        this.state.rows = [];
+    }
+
     getHeader = () => {
-        var keys = this.props.data;
-        this.keys = keys;
-        return keys.map((key, index)=>{
+        this.keys = this.props.data;
+        return this.keys .map((key, index)=>{
         return <th key={key}>{key.toUpperCase()}</th>
         })
     }
@@ -39,16 +43,20 @@ class Table1 extends Component{
     agregar_datos = (array) => {
         if(array.length > 0)
         {
+            this.setState({rows: []})
             for(var aux of array)
             {
-                var temp = {
-                    Paciente: aux.name,
-                    Edad: aux.age,
-                    Ubicacion: aux.location,
-                    Tipo: aux.infectedtype,
-                    Estado: aux.state
-                };
-                this.addRow(temp);
+                if(aux.name != null)
+                {
+                    var temp = {
+                        Paciente: aux.name,
+                        Edad: aux.age,
+                        Ubicacion: aux.location,
+                        Tipo: aux.infectedtype,
+                        Estado: aux.state
+                    };
+                    this.addRow(temp);
+                }
             }
 
         }
@@ -61,7 +69,7 @@ class Table1 extends Component{
                 <thead><tr className="table-primary">{this.getHeader()}</tr></thead>
                     <tbody>
                         {
-                            this.state.rows.map((row, index) => { return <TableRow key={index} row={row} keys={this.keys} rowindex = {index + 1}></TableRow>} )
+                            this.state.rows.map((row, index) => { return <TableRow1 key={index} row={row} keys={this.keys} rowindex = {index + 1}></TableRow1>} )
                         }
 
                     </tbody>
