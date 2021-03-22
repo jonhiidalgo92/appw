@@ -26,6 +26,7 @@ function App() {
   return (
     <Router>
       <Navegacion/>
+      <Route path="/"         exact component = {Datos}/>
       <Route path="/repo"     exact component = {Reportes}/>
       <Route path="/data"     exact component = {Datos}/>
       <Route path="/metricas" exact component = {Metricas}/>

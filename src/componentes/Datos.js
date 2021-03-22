@@ -281,14 +281,6 @@ export default class Datos extends Component {
             <div className="container-fluid">
                 <br/>
                 <div className="row">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a href="/">Home</a></li>
-                            <li className="breadcrumb-item active" aria-current="page">Modulos</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div className="row">
                     <div className="col col-lg-4 col-md-12 col-sm-12">
                         <div className="card border-primary mb-3" id="CEegiones">
                             <div className="card-header">
