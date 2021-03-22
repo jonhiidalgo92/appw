@@ -10,7 +10,7 @@ import Navegacion from './componentes/Navegacion'
 
 import Reportes from './componentes/Reportes'
 
-import Data from './componentes/Data'
+import Datos from './componentes/Datos'
 
 import Metricas from './componentes/Metricas'
 
@@ -27,12 +27,11 @@ function App() {
     <Router>
       <Navegacion/>
       <Route path="/repo"     exact component = {Reportes}/>
-      <Route path="/data"     exact component = {Data}/>
+      <Route path="/data"     exact component = {Datos}/>
       <Route path="/metricas" exact component = {Metricas}/>
       <Route path="/top"      exact component = {Top}/>
-      <Route path="/type"      exact component = {Type}/>
+      <Route path="/type"     exact component = {Type}/>
       <Route path="/funel"    exact component = {ChartContainer}/>
-
     </Router>
   );
 }

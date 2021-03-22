@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import TableRow from './TableRow';
+import TableRow1 from './TableRow1';
 
-class Table extends Component{
+class Table1 extends Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -28,10 +28,14 @@ class Table extends Component{
         this.setState({rows})
     }
 
+    removeRows = () =>
+    {
+        this.state.rows = [];
+    }
+
     getHeader = () => {
-        var keys = this.props.data;
-        this.keys = keys;
-        return keys.map((key, index)=>{
+        this.keys = this.props.data;
+        return this.keys .map((key, index)=>{
         return <th key={key}>{key.toUpperCase()}</th>
         })
     }
@@ -39,20 +43,33 @@ class Table extends Component{
     agregar_datos = (array) => {
         if(array.length > 0)
         {
-            console.log("ingreso");
+            this.setState({rows: []})
             for(var aux of array)
-                this.addRow(aux);
+            {
+                if(aux.name != null)
+                {
+                    var temp = {
+                        Paciente: aux.name,
+                        Edad: aux.age,
+                        Ubicacion: aux.location,
+                        Tipo: aux.infectedtype,
+                        Estado: aux.state
+                    };
+                    this.addRow(temp);
+                }
+            }
+
         }
 	}
 
     render() {
         return (
             <div>
-                <table className="table table-hover">
+                <table className="table table-bordered">
                 <thead><tr className="table-primary">{this.getHeader()}</tr></thead>
                     <tbody>
                         {
-                            this.state.rows.map((row, index) => { return <TableRow key={index} row={row} keys={this.keys} rowindex = {index + 1}></TableRow>} )
+                            this.state.rows.map((row, index) => { return <TableRow1 key={index} row={row} keys={this.keys} rowindex = {index + 1}></TableRow1>} )
                         }
 
                     </tbody>
@@ -62,4 +79,4 @@ class Table extends Component{
     }
 }
 
-export default Table
+export default Table1;
