@@ -1,12 +1,37 @@
 import React, { Component } from 'react'
-import {Pie} from 'react-chartjs-2'
-import 'chart.piecelabel.js';
 import Table from './Table';
+import CanvasJSReact from '../canvasjs.react';
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
+var dataPoint;
+var total;
+var datap = [
+    { y: 1400, label: "Prospects" },
+    { y: 1212, label: "Qualified Prospects" },
+    { y: 1080, label: "Proposals" },
+    { y: 665,  label: "Negotiation" },
+    { y: 578, label: "Final Sales" }
+];
+const options = {
+    animationEnabled: true,
+    title:{
+        text: "Top 5 departamentos infectados"
+    },
+    data: [{
+        type: "funnel",
+        toolTipContent: "<b>{label}</b>: {y} <b>({percentage}%)</b>",
+        indexLabelPlacement: "inside",
+        indexLabel: "{label} ({percentage}%)",
+        dataPoints: datap
+    }]
+}
 
 export default class Funell extends Component {
     constructor(props) {
         super(props);
+        this.peticion = this.peticion.bind(this);
+        this.configuracionG_ = this.configuracionG_.bind(this);
+
         this.child1 = React.createRef();
         this.headerstable = ["name", "location", "age", "infectedtype", "state", "way"]
         this.genres = [
@@ -18,96 +43,48 @@ export default class Funell extends Component {
         ]
         this.state = {
             filtrado:[],
-            respuesta:[],
-            estado:[],
-            porcentajes:[],
-            colores:[],
-            data:[],
             opciones:[],
+            points:[]
         }
       }
 
     async peticion(){
         var peticion  = await fetch("http://35.222.55.115:8080/obtenerUsuarios")
         this.state.filtrado = await peticion.json();
-        //hacemos la peticion
-        var peticion  = await fetch("http://35.222.55.115:8080/Top5")
-        var respuestat = await peticion.json();
 
-        //metemos la respuesta
-        this.setState({respuesta: respuestat});
-
-        var estadot=[]
-        var porcentajet=[]
-
-        this.state.respuesta.map((elemento)=>{
-            estadot.push(elemento.location);
-            porcentajet.push(elemento.total);
-        });
-
-        
-        this.setState({estado: estadot, porcentajes: porcentajet});
-        console.log(this.state.estado)
-        console.log(this.state.porcentajes)
-
-        console.log(respuestat)
     }
     
-    //Generar Caracter de manera aleatoria
-    generar_(){
-        var Caracte= ["a","b","c","d","e","f","1","2","3","4","5","6","7","8","9"]
-        var numero = (Math.random()*15).toFixed(0);
-        return Caracte[numero];
-    }
+    async configuracionG_(){
+        //hacemos la peticion
+        var peticion  = await fetch("http://35.222.55.115:8080/Top5")
+        this.state.points = await peticion.json();
 
-    //concatena la cadena para que sea un formato de cadena hexadecimal
-    colorHex_(){
-        var color = "";
-        for(var index=0;index<6;index++){
-            color= color + this.generar_();
-        }
-        return "#"+color;
-    }
+        if(this.state.points.length > 0)
+        {
+            let initial =  datap.length
+            for(let i = 0; i <= initial ; i++)
+                datap.pop();
 
-    //generar colores
-    generarC_(){
-        var coloresf=[];
-        for (var i = 0; i < this.state.respuesta.length ; i++){
-            coloresf.push(this.colorHex_());
-        }
-        this.setState({colores:coloresf});
-        console.log(this.state.colores);
-    }
+            for(let i = 0 ; i < 5; i++)
+                datap.push({ y: this.state.points[i].valor, label: this.state.points[i].location });
 
-    //configuramos la grafica
-    configuracionG_(){
-
-
-        
-        const data= {
-            labels: this.state.estado,
-            datasets:[{
-                data: this.state.porcentajes,
-                backgroundColor: this.state.colores
-            }]
-        };
-
-        const opciones={
-            responsive:true,
-            maintainAspectRatio: false,
-            outlabels: {
-                text: 'value'
+            dataPoint = options.data[0].dataPoints;
+            total = dataPoint[0].y;
+            for(var i = 0; i < datap.length; i++) {
+                if(i == 0) {
+                    options.data[0].dataPoints[i].percentage = 100;
+                } else {
+                    options.data[0].dataPoints[i].percentage = ((dataPoint[i].y / total) * 100).toFixed(2);
+                }
             }
+            this.chart.render();
         }
-        //almacenamos
-        this.setState({data: data, opciones: opciones});
     }
 
     //ma
     async componentDidMount(){
-        await this.peticion();
-        await this.generarC_();
-        await this.configuracionG_();
+        setInterval(this.peticion, 3000);
+        setInterval(this.configuracionG_, 3000);
     }
     //
 
@@ -217,8 +194,11 @@ export default class Funell extends Component {
             </div>
 
             <h1>Porcentajes  State </h1>
-
-            <Pie data={this.state.data}/>
+            <div className="card border-primary mb-3">
+              <div className="card-body">
+                <CanvasJSChart options = {options}onRef={ref => this.chart = ref}/>
+              </div>
+            </div>
             </div>
         )
     }
