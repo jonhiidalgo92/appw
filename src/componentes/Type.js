@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import {Pie} from 'react-chartjs-2'
 import 'chart.piecelabel.js';
 
-
-
 export default class Type extends Component {
     state ={
         respuesta:[],
@@ -97,3 +95,5 @@ export default class Type extends Component {
 
 
 }
+
+
