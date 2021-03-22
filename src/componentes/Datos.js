@@ -221,30 +221,31 @@ export default class Datos extends Component {
             res.json().then(result=>
             {
                 let values = JSON.parse(JSON.stringify(result));
+                this.generarC_RE();
                 if(values.length > 0) this.state3.respuesta = values;
                 this.state3.edad = []
                 this.state3.cantidad = []
                 this.state3.respuesta.forEach(item=>
                 {
                     this.state3.cantidad.push(item.count)
-                    this.state3.edad.push(item.age)
+                    this.state3.edad.push(item.legend)
                 });
                 var densityData = {
                     label: 'Edad de Pacientes',
                     data: this.state3.cantidad,
-                    backgroundColor: this.state3.colores
+                    backgroundColor: this.state3.colores,
+                    borderColor: this.state3.colores,
+                    borderWidth: 2,
+                    hoverBorderWidth: 0
                 };
                 this.state3.data = {
                     labels: this.state3.edad,
                     datasets: [densityData]
                 };
                 this.state3.opciones = {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            boxWidth: 80,
-                            fontColor: 'black'
+                    elements: {
+                        rectangle: {
+                            borderSkipped: 'left',
                         }
                     }
                 };
@@ -371,7 +372,7 @@ export default class Datos extends Component {
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
-                                    <Bar data={this.state3.data} options={this.state3.opciones} />
+                                    <Bar data={this.state3.data} options={this.state3.opciones} legend={this.state3.legend}/>
                                 </div>
                             </div>
                             <div className="card-footer text-right">

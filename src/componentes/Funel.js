@@ -196,7 +196,7 @@ export default class Funell extends Component {
             <h1>Porcentajes  State </h1>
             <div className="card border-primary mb-3">
               <div className="card-body">
-                <CanvasJSChart options = {options}onRef={ref => this.chart = ref}/>
+                <CanvasJSChart options = {options} onRef={ref => this.chart = ref}/>
               </div>
             </div>
             </div>
