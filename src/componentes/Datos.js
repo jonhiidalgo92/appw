@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import Table from "./Table1";
-import {Pie} from 'react-chartjs-2'
+import {Bar, Pie} from 'react-chartjs-2'
 import 'chart.piecelabel.js';
-import {Bar} from "react-chartjs-2";
 
 
 export default class Datos extends Component {
@@ -13,6 +12,8 @@ export default class Datos extends Component {
         this.updatePacientes= this.updatePacientes.bind(this);
         this.peticionIT= this.peticionIT.bind(this);
         this.peticionCE= this.peticionCE.bind(this);
+        this.peticiones_Range = this.peticiones_Range.bind(this);
+
         this.state = {
             curTime : null
         }
@@ -30,7 +31,16 @@ export default class Datos extends Component {
             porcentajes:[],
             colores:[],
             data:[],
-            opciones:[]
+            opciones: []
+        }
+        this.state3 ={
+            respuesta: [],
+            edad: [],
+            cantidad: [],
+            colores: [],
+            data: [],
+            opciones: [],
+            type: 'bar'
         }
     }
 
@@ -181,6 +191,67 @@ export default class Datos extends Component {
         this.state2.opciones = opcionest;
     }
 
+    generar_RE(){
+        var Caracte= ["a","b","c","d","e","f","1","2","3","4","5","6","7","8","9"]
+        var numero = (Math.random()*15).toFixed(0);
+        return Caracte[numero];
+    }
+
+    //concatena la cadena para que sea un formato de cadena hexadecimal
+    colorHex_RE(){
+        var color = "";
+        for(var index=0;index<6;index++){
+            color= color + this.generar_RE();
+        }
+        return "#"+color;
+    }
+
+    //generar colores
+    generarC_RE(){
+        var coloresf=[];
+        for (var i = 0; i < this.state3.respuesta.length ; i++){
+            coloresf.push(this.colorHex_RE());
+        }
+        this.state3.colores = coloresf;
+    }
+
+    async peticiones_Range()
+    {
+        await fetch('http://35.222.55.115:8080/Ages').then(res=>{
+            res.json().then(result=>
+            {
+                let values = JSON.parse(JSON.stringify(result));
+                if(values.length > 0) this.state3.respuesta = values;
+                this.state3.edad = []
+                this.state3.cantidad = []
+                this.state3.respuesta.forEach(item=>
+                {
+                    this.state3.cantidad.push(item.count)
+                    this.state3.edad.push(item.age)
+                });
+                var densityData = {
+                    label: 'Edad de Pacientes',
+                    data: this.state3.cantidad,
+                    backgroundColor: this.state3.colores
+                };
+                this.state3.data = {
+                    labels: this.state3.edad,
+                    datasets: [densityData]
+                };
+                this.state3.opciones = {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            boxWidth: 80,
+                            fontColor: 'black'
+                        }
+                    }
+                };
+            })
+        })
+    }
+
     componentDidMount() {
         setInterval( () => {
             this.setState({
@@ -190,6 +261,7 @@ export default class Datos extends Component {
         setInterval(this.updatePacientes,2000);
         setInterval(this.peticionIT, 2000);
         setInterval(this.peticionCE, 2000);
+        setInterval(this.peticiones_Range, 2000);
     }
 
     async updatePacientes() {
@@ -216,7 +288,7 @@ export default class Datos extends Component {
                     </nav>
                 </div>
                 <div className="row">
-                    <div className="col col-lg-4 col-md-4 col-sm-12">
+                    <div className="col col-lg-4 col-md-12 col-sm-12">
                         <div className="card border-primary mb-3" id="CEegiones">
                             <div className="card-header">
                                 <h1>Integrantes</h1>
@@ -246,7 +318,7 @@ export default class Datos extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col col-lg-8 col-md-8 col-sm-12">
+                    <div className="col col-lg-8 col-md-12 col-sm-12">
                         <div className="card border-primary mb-3" id="CEegiones">
                             <div className="card-header">
                                 <h1>Casos Infectados por InfectedType </h1>
@@ -289,6 +361,24 @@ export default class Datos extends Component {
                                 <strong>Last Update on:</strong>&nbsp;<span className="badge badge-info">{this.state.curTime}</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col col-lg-12 col-md-12 col-sm-12">
+                        <div className="card border-primary mb-3" id="top5Pacientes">
+                            <div className="card-header">
+                                <h1>Rango de Edades (Pacientes)</h1>
+                            </div>
+                            <div className="card-body">
+                                <div className="table-responsive">
+                                    <Bar data={this.state3.data} options={this.state3.opciones} />
+                                </div>
+                            </div>
+                            <div className="card-footer text-right">
+                                <strong>Last Update on:</strong>&nbsp;<span className="badge badge-info">{this.state.curTime}</span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
