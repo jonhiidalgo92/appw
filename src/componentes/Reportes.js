@@ -52,6 +52,10 @@ export default class Reportes extends Component {
         }
       
         async updateChart() {
+
+
+          
+
         await fetch("http://35.222.55.115:8080/ram").then((res)=>{
           res.json().then((result)=>{
             dps.push({x: xVal*3,y: result.uso});
