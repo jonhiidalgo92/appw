@@ -12,7 +12,6 @@ import Reportes from './componentes/Reportes'
 
 import Datos from './componentes/Datos'
 
-import Metricas from './componentes/Metricas'
 
 import Top from './componentes/Top'
 
@@ -29,7 +28,6 @@ function App() {
       <Route path="/"         exact component = {Datos}/>
       <Route path="/repo"     exact component = {Reportes}/>
       <Route path="/data"     exact component = {Datos}/>
-      <Route path="/metricas" exact component = {Metricas}/>
       <Route path="/top"      exact component = {Top}/>
       <Route path="/type"     exact component = {Type}/>
       <Route path="/funel"    exact component = {ChartContainer}/>

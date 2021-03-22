@@ -30,11 +30,6 @@ export default class Navegacion extends Component {
                     </li>
 
                     <li className="nav-item">
-                        <Link className="nav-link" to="/metricas">
-                            Metricas
-                        </Link>
-                    </li>
-                    <li className="nav-item">
                         <Link className="nav-link" to="/top">
                             Top
                         </Link>

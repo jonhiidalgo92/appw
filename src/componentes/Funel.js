@@ -189,7 +189,9 @@ export default class Funell extends Component {
             
             <div className="card border-primary mb-3">
               <div className="card-body">
-                <Table data={this.headerstable} ref={this.child1}/>
+                  <div className="table-responsive">
+                      <Table data={this.headerstable} ref={this.child1}/>
+                  </div>
               </div>
             </div>
 

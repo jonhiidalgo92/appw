@@ -133,30 +133,39 @@ export default class Reportes extends Component {
         return (
           <div className="jumbotron">
             <h1 id="buttons">System Monitor</h1>
-            <div className="card border-primary mb-3">
-              <div className="card-body">
               <div className="row">
-                <div className="col">
-                  <div className="card-header">Uso de Memoria</div>
-                  <div className="card-body">
-                  <CanvasJSChart options = {options} onRef={ref => this.chart = ref}/>
-                  </div> 
-                </div>
-                <div className="col">
-                <div className="card-header">Distribucion Ram</div>
-                  <div className="card-body">
-                  <CanvasJSChart options = {options_d} onRef={ref => this.chart2 = ref}/>
+                  <div className="col col-lg-6 col-sm-12 col-md-12">
+                    <div className="card border-primary mb-3">
+                        <div className="card-header">
+                            <h2>Uso de Memoria</h2></div>
+                        <div className="card-body">
+                            <CanvasJSChart options = {options} onRef={ref => this.chart = ref}/>
+                        </div> 
+                    </div>
                   </div>
-                </div>
-              </div>
-              </div>
+                  <div className="col col-lg-6 col-sm-12 col-md-12">
+                      <div className="card border-primary mb-3">
+                          <div className="card-header"><h2>Distribucion Ram</h2></div>
+                        <div className="card-body">
+                            <CanvasJSChart options = {options_d} onRef={ref => this.chart2 = ref}/>
+                        </div>
+                      </div>
+                  </div>
             </div>
-          
-            <div className="card border-primary mb-3">
-              <div className="card-body">
-                <Table data={this.table_ram} ref={this.child1}/>
+              <div className="row">
+                  <div className="col col-lg-12 col-md-12 col-sm-12">
+                      <div className="card border-primary mb-3">
+                          <div className="card-header">
+                              <h2>Lista de Procesos</h2>
+                          </div>
+                          <div className="card-body">
+                              <div className="table-responsive">
+                                  <Table data={this.table_ram} ref={this.child1}/>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
-            </div>
           </div>
         );
       }
