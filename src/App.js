@@ -30,9 +30,8 @@ function App() {
       <Route path="/data"     exact component = {Datos}/>
       <Route path="/metricas" exact component = {Metricas}/>
       <Route path="/top"      exact component = {Top}/>
-      <Route path="/type"      exact component = {Type}/>
+      <Route path="/type"     exact component = {Type}/>
       <Route path="/funel"    exact component = {ChartContainer}/>
-
     </Router>
   );
 }

@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Table from "./Table1";
 import {Pie} from 'react-chartjs-2'
 import 'chart.piecelabel.js';
+import {Bar} from "react-chartjs-2";
 
 
 export default class Datos extends Component {
@@ -10,14 +11,14 @@ export default class Datos extends Component {
         this.childPacientes1 =  React.createRef();
         this.table_Headers = ["Paciente","Edad","Ubicacion","Tipo","Estado"];
         this.updatePacientes= this.updatePacientes.bind(this);
-        this.peticionfunnel= this.peticionfunnel.bind(this);
-        this.peticionTopR= this.peticionTopR.bind(this);
+        this.peticionIT= this.peticionIT.bind(this);
+        this.peticionCE= this.peticionCE.bind(this);
         this.state = {
             curTime : null
         }
         this.state1 ={
             respuesta:[],
-            estado:[],
+            infectedtype:[],
             porcentajes:[],
             colores:[],
             data:[],
@@ -36,9 +37,9 @@ export default class Datos extends Component {
 
 
 
-    async peticionfunnel(){
+    async peticionIT(){
         //hacemos la peticion
-        await fetch("http://35.222.55.115:8080/Top5").then(res=>
+        await fetch("http://35.222.55.115:8080/type").then(res=>
         {
             res.json().then((result) => {
                 this.state1.respuesta = JSON.parse(JSON.stringify(result))
@@ -47,40 +48,40 @@ export default class Datos extends Component {
                     var porcentajet = []
 
                     this.state1.respuesta.forEach((elemento) => {
-                        estadot.push(elemento.location);
-                        porcentajet.push(elemento.total);
+                        estadot.push(elemento.infectedtype);
+                        porcentajet.push(elemento.porcent);
                     });
 
-                    this.state1.estado = estadot;
+                    this.state1.infectedtype = estadot;
                     this.state1.porcentajes = porcentajet;
-                    this.generarC_funnel();
-                    this.configuracionG_funnel();
+                    this.generarC_IT();
+                    this.configuracionG_IT();
                 }
             })
         })
     }
 
     //Generar Caracter de manera aleatoria
-    generar_funnel(){
+    generar_IT(){
         var Caracte= ["a","b","c","d","e","f","1","2","3","4","5","6","7","8","9"]
         var numero = (Math.random()*15).toFixed(0);
         return Caracte[numero];
     }
 
     //concatena la cadena para que sea un formato de cadena hexadecimal
-    colorHex_funnel(){
+    colorHex_IT(){
         var color = "";
         for(var index=0;index<6;index++){
-            color= color + this.generar_funnel();
+            color= color + this.generar_IT();
         }
         return "#"+color;
     }
 
     //generar colores
-    generarC_funnel(){
+    generarC_IT(){
         var coloresf=[];
         for (var i = 0; i < this.state1.respuesta.length ; i++){
-            coloresf.push(this.colorHex_funnel());
+            coloresf.push(this.colorHex_IT());
         }
         this.state1.colores = coloresf;
         //this.setState({colores:coloresf});
@@ -88,9 +89,9 @@ export default class Datos extends Component {
     }
 
     //configuramos la grafica
-    configuracionG_funnel(){
+    configuracionG_IT(){
         const data= {
-            labels: this.state1.estado,
+            labels: this.state1.infectedtype,
             datasets:[{
                 data: this.state1.porcentajes,
                 backgroundColor: this.state1.colores
@@ -110,7 +111,7 @@ export default class Datos extends Component {
         //this.setState({data: data, opciones: opciones});
     }
 
-    async peticionTopR(){
+    async peticionCE(){
         await fetch("http://35.222.55.115:8080/state").then(res=>
         {
             res.json().then((result) => {
@@ -127,40 +128,40 @@ export default class Datos extends Component {
                     this.state2.estado = estadot;
                     this.state2.porcentajes = porcentajet;
 
-                    this.generarC_TopR();
-                    this.configuracionG_TopR();
+                    this.generarC_CE();
+                    this.configuracionG_CE();
                 }
             })
         })
 
     }
     //Generar Caracter de manera aleatoria
-    generar_TopR(){
+    generar_CE(){
         var Caracte= ["a","b","c","d","e","f","1","2","3","4","5","6","7","8","9"]
         var numero = (Math.random()*15).toFixed(0);
         return Caracte[numero];
     }
 
     //concatena la cadena para que sea un formato de cadena hexadecimal
-    colorHex_TopR(){
+    colorHex_CE(){
         var color = "";
         for(var index=0;index<6;index++){
-            color= color + this.generar_TopR();
+            color= color + this.generar_CE();
         }
         return "#"+color;
     }
 
     //generar colores
-    generarC_TopR(){
+    generarC_CE(){
         var coloresf=[];
         for (var i = 0; i < this.state2.respuesta.length ; i++){
-            coloresf.push(this.colorHex_TopR());
+            coloresf.push(this.colorHex_CE());
         }
         this.state2.colores = coloresf;
     }
 
     //configuramos la grafica
-    configuracionG_TopR(){
+    configuracionG_CE(){
         const datat= {
             labels: this.state2.estado,
             datasets:[{
@@ -187,8 +188,8 @@ export default class Datos extends Component {
             })
         },2000)
         setInterval(this.updatePacientes,2000);
-        setInterval(this.peticionfunnel, 2000);
-        setInterval(this.peticionTopR, 2000);
+        setInterval(this.peticionIT, 2000);
+        setInterval(this.peticionCE, 2000);
     }
 
     async updatePacientes() {
@@ -203,31 +204,59 @@ export default class Datos extends Component {
 
     render() {
         return(
+
             <div className="container-fluid">
+                <br/>
+                <div className="row">
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a href="/">Home</a></li>
+                            <li className="breadcrumb-item active" aria-current="page">Modulos</li>
+                        </ol>
+                    </nav>
+                </div>
                 <div className="row">
                     <div className="col col-lg-4 col-md-4 col-sm-12">
-                        <div className="card border-primary mb-3" id="topRegiones">
+                        <div className="card border-primary mb-3" id="CEegiones">
                             <div className="card-header">
                                 <h1>Integrantes</h1>
                             </div>
                             <div className="card-body">
-
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item">
+                                        <span><strong>Jonathan Baudilio Hidalgo Perez</strong>&nbsp;&nbsp;</span><span className="badge badge-warning">Rabbitmq</span>
+                                    </li>
+                                    <li className="list-group-item">
+                                        <span><strong>Abner Abisai Hernández Vargas</strong>&nbsp;&nbsp;</span><span className="badge badge-primary">PubSub</span>
+                                    </li>
+                                    <li className="list-group-item">
+                                        <span><strong>Asunción Mariana Sic Sor</strong>&nbsp;&nbsp;</span><span className="badge badge-info">Grpc</span>
+                                    </li>
+                                    <li className="list-group-item">
+                                        <span><strong>José Orlando Wannan Escobar</strong>&nbsp;&nbsp;</span><span className="badge badge-success">NATS</span>
+                                    </li>
+                                </ul>
                             </div>
                             <div className="card-footer text-right">
-                                <strong><span className="badge badge-info">UNIVERSIDAD DE SAN CARLOS DE GUATEMALA - SISTEMAS OPERATIVOS 1 - 2021</span></strong>
+                                <strong><span className="badge badge-info">UNIVERSIDAD DE SAN CARLOS DE GUATEMALA</span></strong>
+                                <br/>
+                                <strong><span className="badge badge-info">SISTEMAS OPERATIVOS 1</span></strong>
+                                <br/>
+                                <strong><span className="badge badge-info">2021</span></strong>
                             </div>
                         </div>
                     </div>
                     <div className="col col-lg-8 col-md-8 col-sm-12">
-                        <div className="card border-primary mb-3" id="topRegiones">
+                        <div className="card border-primary mb-3" id="CEegiones">
                             <div className="card-header">
-                                <h1>Porcentajes  State </h1>
+                                <h1>Casos Infectados por InfectedType </h1>
                             </div>
                             <div className="card-body">
                                 <Pie data={this.state1.data} opciones={this.state1.opciones}/>
                             </div>
                             <div className="card-footer text-right">
                                 <strong>Last Update on:</strong>&nbsp;<span className="badge badge-info">{this.state.curTime}</span>
+
                             </div>
                         </div>
                     </div>
@@ -249,9 +278,9 @@ export default class Datos extends Component {
                         </div>
                     </div>
                     <div className="col col-lg-6 col-md-6 col-sm-12">
-                        <div className="card border-primary mb-3" id="funnel">
+                        <div className="card border-primary mb-3" id="IT">
                             <div className="card-header">
-                                <h1>Top Regiones </h1>
+                                <h1>Casos Infectados por State</h1>
                             </div>
                             <div className="card-body">
                                 <Pie data={this.state2.data} opciones={this.state2.opciones}/>
@@ -263,6 +292,7 @@ export default class Datos extends Component {
                     </div>
                 </div>
             </div>
+
         )
     }
 }

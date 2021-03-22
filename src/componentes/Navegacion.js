@@ -49,8 +49,6 @@ export default class Navegacion extends Component {
                            Infectedtype
                         </Link>
                     </li>
-
-
                 </ul>
                 </div>
             </div>
