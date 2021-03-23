@@ -1,30 +1,6 @@
 import React, { Component } from 'react'
 import Table from './Table';
-import CanvasJSReact from '../canvasjs.react';
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-var dataPoint;
-var total;
-var datap = [
-    { y: 1400, label: "Prospects" },
-    { y: 1212, label: "Qualified Prospects" },
-    { y: 1080, label: "Proposals" },
-    { y: 665,  label: "Negotiation" },
-    { y: 578, label: "Final Sales" }
-];
-const options = {
-    animationEnabled: true,
-    title:{
-        text: "Top 5 departamentos infectados"
-    },
-    data: [{
-        type: "funnel",
-        toolTipContent: "<b>{label}</b>: {y} <b>({percentage}%)</b>",
-        indexLabelPlacement: "inside",
-        indexLabel: "{label} ({percentage}%)",
-        dataPoints: datap
-    }]
-}
 
 export default class Funell extends Component {
     constructor(props) {
@@ -41,26 +17,30 @@ export default class Funell extends Component {
             { id: 5, genre: "RabbitMQ" }
         ]
         this.state = {
-            filtrado:[],
-            opciones:[],
-            points:[]
+            filtrado:[]
         }
       }
 
     async peticion(){
-        var peticion  = await fetch("http://35.222.55.115:8080/obtenerUsuarios")
-        this.state.filtrado = await peticion.json();
+        await fetch("http://35.222.55.115:8080/obtenerUsuarios").then((r)=>
+        {
+            r.json().then((result)=>
+            {
+                this.state.filtrado = JSON.parse(JSON.stringify(result));
+            })
+        })
+
     }
     //ma
     async componentDidMount(){
         setInterval(this.peticion, 3000);
-
     }
     //
 
     handleGenreSelect = genre => {
         try
         {
+
             this.child1.current.removeRow();
             //console.log(this.state.filtrado);
             switch(genre.target.selectedIndex)
