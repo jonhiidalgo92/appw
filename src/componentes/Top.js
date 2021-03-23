@@ -45,8 +45,6 @@ export default class Top extends Component {
         return Caracte[numero];
     }
 
-
-
     //concatena la cadena para que sea un formato de cadena hexadecimal
     colorHex_(){
         var color = "";
@@ -93,7 +91,6 @@ export default class Top extends Component {
         await this.generarC_();
         await this.configuracionG_();
     }
-
 
     render() {
         return (
