@@ -141,3 +141,4 @@ luego lo almacenamos  y seteamos la data.
 ## Desarrollo Gráfica de Funnel
 
 ## Desarrollo Tabla Dinamica
+# Manual de Usuario

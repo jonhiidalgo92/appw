@@ -2,6 +2,31 @@ import React, {Component} from 'react'
 import Table from "./Table1";
 import {Bar, Pie} from 'react-chartjs-2'
 import 'chart.piecelabel.js';
+import CanvasJSReact from '../canvasjs.react';
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+
+var dataPoint;
+var total;
+var datap = [
+    { y: 1400, label: "Prospects" },
+    { y: 1212, label: "Qualified Prospects" },
+    { y: 1080, label: "Proposals" },
+    { y: 665,  label: "Negotiation" },
+    { y: 578, label: "Final Sales" }
+];
+const options = {
+    animationEnabled: true,
+    title:{
+        text: "Top 5 departamentos infectados"
+    },
+    data: [{
+        type: "funnel",
+        toolTipContent: "<b>{label}</b>: {y} <b>({percentage}%)</b>",
+        indexLabelPlacement: "inside",
+        indexLabel: "{label} ({percentage}%)",
+        dataPoints: datap
+    }]
+}
 
 
 export default class Datos extends Component {
@@ -14,8 +39,16 @@ export default class Datos extends Component {
         this.peticionCE= this.peticionCE.bind(this);
         this.peticiones_Range = this.peticiones_Range.bind(this);
 
+        this.configuracion_Funnel = this.configuracion_Funnel.bind(this);
+
         this.state = {
             curTime : null
+        }
+
+        this.state4 = {
+            filtrado:[],
+            opciones:[],
+            points:[]
         }
         this.state1 ={
             respuesta:[],
@@ -44,16 +77,13 @@ export default class Datos extends Component {
         }
     }
 
-
-
-
     async peticionIT(){
         //hacemos la peticion
         await fetch("http://35.222.55.115:8080/type").then(res=>
         {
             res.json().then((result) => {
                 this.state1.respuesta = JSON.parse(JSON.stringify(result))
-                if (this.state1.respuesta.length > 0) {
+                if (this.state1.respuesta.length > 1) {
                     var estadot = []
                     var porcentajet = []
 
@@ -126,7 +156,7 @@ export default class Datos extends Component {
         {
             res.json().then((result) => {
                 this.state2.respuesta = JSON.parse(JSON.stringify(result))
-                if (this.state2.respuesta.length > 0) {
+                if (this.state2.respuesta.length > 1) {
                     var estadot = []
                     var porcentajet = []
 
@@ -145,6 +175,7 @@ export default class Datos extends Component {
         })
 
     }
+
     //Generar Caracter de manera aleatoria
     generar_CE(){
         var Caracte= ["a","b","c","d","e","f","1","2","3","4","5","6","7","8","9"]
@@ -253,6 +284,41 @@ export default class Datos extends Component {
         })
     }
 
+
+    async configuracion_Funnel(){
+        //hacemos la peticion
+        await fetch("http://35.222.55.115:8080/Top5").then(r=>
+        {
+            r.json().then(
+                result =>
+                {
+                    this.state4.points = JSON.parse(JSON.stringify(result));
+
+                    if(this.state4.points.length > 1)
+                    {
+                        let initial =  datap.length
+                        for(let i = 0; i <= initial ; i++)
+                            datap.pop();
+
+
+                        for(let i = 0 ; i < 5; i++)
+                            datap.push({ y: this.state4.points[i].valor, label: "Ubicacion: "+this.state4.points[i].location +", Cantidad: "+this.state4.points[i].valor });
+
+                        dataPoint = options.data[0].dataPoints;
+                        total = dataPoint[0].y;
+                        options.data[0].dataPoints[0].percentage = 100;
+                        for(var i = 1; i < datap.length; i++) {
+                            options.data[0].dataPoints[i].percentage = ((dataPoint[i].y / total) * 100).toFixed(2);
+                        }
+                        this.chart.render();
+                    }
+                }
+            )
+        })
+
+    }
+
+
     componentDidMount() {
         setInterval( () => {
             this.setState({
@@ -263,6 +329,7 @@ export default class Datos extends Component {
         setInterval(this.peticionIT, 2000);
         setInterval(this.peticionCE, 2000);
         setInterval(this.peticiones_Range, 2000);
+        setInterval(this.configuracion_Funnel, 2000);
     }
 
     async updatePacientes() {
@@ -270,7 +337,20 @@ export default class Datos extends Component {
         await fetch('http://35.222.55.115:8080/top5/pacientes').then((res) => {
             res.json().then((result) => {
                 let stringify = JSON.parse(JSON.stringify(result))
-                this.childPacientes1.current.agregar_datos(stringify);
+                if(stringify.length>1)
+                {
+                    this.childPacientes1.current.agregar_datos(stringify);
+                }
+
+            })
+        })
+    }
+
+    async updateRegion() {
+        await fetch('http://35.222.55.115:8080/region').then((res) => {
+            res.json().then((result) => {
+                let stringify = JSON.parse(JSON.stringify(result))
+                console.log(stringify);
             })
         })
     }
@@ -358,7 +438,7 @@ export default class Datos extends Component {
                 </div>
                 <div className="row">
                     <div className="col col-lg-12 col-md-12 col-sm-12">
-                        <div className="card border-primary mb-3" id="top5Pacientes">
+                        <div className="card border-primary mb-3" id="RangoEdades">
                             <div className="card-header">
                                 <h1>Rango de Edades (Pacientes)</h1>
                             </div>
@@ -374,8 +454,25 @@ export default class Datos extends Component {
 
                     </div>
                 </div>
-            </div>
+                <div className="row">
+                    <div className="col col-lg-12 col-md-12 col-sm-12">
+                        <div className="card border-primary mb-3" id="top5departamentosfunnel">
+                            <div className="card-header">
+                                <h1>Top 5 departamentos infectados</h1>
+                            </div>
+                            <div className="card-body">
+                                <div className="table-responsive">
+                                    <CanvasJSChart options = {options} onRef={ref => this.chart = ref}/>
+                                </div>
+                            </div>
+                            <div className="card-footer text-right">
+                                <strong>Last Update on:</strong>&nbsp;<span className="badge badge-info">{this.state.curTime}</span>
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
         )
     }
 }
