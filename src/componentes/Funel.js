@@ -30,7 +30,6 @@ export default class Funell extends Component {
     constructor(props) {
         super(props);
         this.peticion = this.peticion.bind(this);
-        this.configuracionG_ = this.configuracionG_.bind(this);
 
         this.child1 = React.createRef();
         this.headerstable = ["name", "location", "age", "infectedtype", "state", "way"]
@@ -51,40 +50,11 @@ export default class Funell extends Component {
     async peticion(){
         var peticion  = await fetch("http://35.222.55.115:8080/obtenerUsuarios")
         this.state.filtrado = await peticion.json();
-
     }
-    
-    async configuracionG_(){
-        //hacemos la peticion
-        var peticion  = await fetch("http://35.222.55.115:8080/Top5")
-        this.state.points = await peticion.json();
-
-        if(this.state.points.length > 0)
-        {
-            let initial =  datap.length
-            for(let i = 0; i <= initial ; i++)
-                datap.pop();
-
-            for(let i = 0 ; i < 5; i++)
-                datap.push({ y: this.state.points[i].valor, label: this.state.points[i].location });
-
-            dataPoint = options.data[0].dataPoints;
-            total = dataPoint[0].y;
-            for(var i = 0; i < datap.length; i++) {
-                if(i == 0) {
-                    options.data[0].dataPoints[i].percentage = 100;
-                } else {
-                    options.data[0].dataPoints[i].percentage = ((dataPoint[i].y / total) * 100).toFixed(2);
-                }
-            }
-            this.chart.render();
-        }
-    }
-
     //ma
     async componentDidMount(){
         setInterval(this.peticion, 3000);
-        setInterval(this.configuracionG_, 3000);
+
     }
     //
 
@@ -181,26 +151,19 @@ export default class Funell extends Component {
 
             <div className="App" style={{width:'100%',height:'500px'}}>
 
-            <h1>Mensajeria</h1>
+                <h1>Mensajeria</h1>
 
-            <select className="custom-select" onChange={this.handleGenreSelect}>
-                {this.genres.map(el => <option key={el.id}>{el.genre}</option>)}
-            </select>
-            
-            <div className="card border-primary mb-3">
-              <div className="card-body">
-                  <div className="table-responsive">
-                      <Table data={this.headerstable} ref={this.child1}/>
+                <select className="custom-select" onChange={this.handleGenreSelect}>
+                    {this.genres.map(el => <option key={el.id}>{el.genre}</option>)}
+                </select>
+
+                <div className="card border-primary mb-3">
+                  <div className="card-body">
+                      <div className="table-responsive">
+                          <Table data={this.headerstable} ref={this.child1}/>
+                      </div>
                   </div>
-              </div>
-            </div>
-
-            <h1>Porcentajes  State </h1>
-            <div className="card border-primary mb-3">
-              <div className="card-body">
-                <CanvasJSChart options = {options} onRef={ref => this.chart = ref}/>
-              </div>
-            </div>
+                </div>
             </div>
         )
     }
