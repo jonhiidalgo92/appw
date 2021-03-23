@@ -3,6 +3,7 @@ import {Pie} from 'react-chartjs-2'
 import 'chart.piecelabel.js';
 
 export default class Top extends Component {
+
     state ={
         respuesta:[],
         estado:[],
@@ -11,6 +12,8 @@ export default class Top extends Component {
         data:[],
         opciones:[]
     }
+
+
     async peticion(){
         var peticion  = await fetch("http://35.222.55.115:8080/state")
         var respuestat = await peticion.json();
@@ -31,12 +34,18 @@ export default class Top extends Component {
 
         console.log(respuestat)
     }
+
+
+
+
     //Generar Caracter de manera aleatoria
     generar_(){
         var Caracte= ["a","b","c","d","e","f","1","2","3","4","5","6","7","8","9"]
         var numero = (Math.random()*15).toFixed(0);
         return Caracte[numero];
     }
+
+
 
     //concatena la cadena para que sea un formato de cadena hexadecimal
     colorHex_(){
@@ -77,12 +86,14 @@ export default class Top extends Component {
         this.setState({data: datat, opciones: opcionest});
     }
 
-    //ma
+    // metodo que se va a llamar repetidamente para actualizar
     async componentDidMount(){
+
         await this.peticion();
         await this.generarC_();
         await this.configuracionG_();
     }
+
 
     render() {
         return (
