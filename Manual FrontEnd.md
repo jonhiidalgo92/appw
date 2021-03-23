@@ -219,3 +219,118 @@ Por ultimo necesario agregar nuestro componente y crear una referencia para hace
 ```
 
 ## Desarrollo Tabla Dinamica
+Primero tenemos que crear componetes para crear la tabla dichos componentes se llamaran Table.js y TableRow.js.
+Contenido componente TableRow.js
+
+```
+    import React, { Component } from 'react'
+
+    class TableRow extends Component{
+        constructor(props) {        //constructor en el que definimos el index para las filas y definimos nuestras funciones para renderizado
+            super(props);
+            this.state = {
+                rowindex : props.rowindex ,
+            }
+
+            this.getRowsData = this.getRowsData.bind(this);
+            this.removeRow = this.removeRow.bind(this)
+        }  
+
+        removeRow(){                //Removemos una fila por su index
+            this.props.handleRemove(this.state.index)
+        }
+
+        getRowsData = function(){   //Devolvemos las filas con los datos a desplegar 
+            var items = [this.props.row];
+            var keys = this.props.keys;
+            return items.map((row, index)=>{
+            return <RenderRow key={index} data={row} keys={keys}/>
+            })
+        }
+
+        render() {
+            return (
+                <tr>
+                    {this.getRowsData()}
+                </tr>
+            )
+        }
+    }
+
+    const RenderRow = (props) =>{   //Se ordena los datos con sus respectivos campos
+        return props.keys.map((key, index)=>{
+        return <td key={props.data[key]}>{props.data[key]}</td>
+        })
+    }
+    export default TableRow;
+```
+
+Desarrollo del componente Table.js
+
+```
+import React, { Component } from 'react'
+import TableRow from './TableRow';      //importamos nuestro componente TableRow
+
+class Table extends Component{          //definimos nuestro constructor y las variables usar arreglo para almacenar tanto las claves para los headers
+    constructor(props) {                //como nuestras tuplas ademas definimos nuestros metodos para renderizado de nuestros componentes
+        super(props);
+        this.state = {
+            rows: [],
+        }
+        this.keys = [];
+        this.getHeader = this.getHeader.bind(this);
+        this.addRow = this.addRow.bind(this)
+        this.removeRow = this.removeRow.bind(this)
+    }
+
+   addRow(data){                        //metodo que nos ayuda a insertar una nueva tupla a huestra tabla
+        var {rows} = this.state
+        rows.push(data);
+        this.setState({rows: rows})
+    }
+
+    removeRow = (index) => {            //metodo que elimina una tupla en base al indice definido previamente
+        var {rows} = this.state;
+        while(rows.length > 0){
+            rows.splice(index, 1);
+        }
+
+        this.setState({rows})
+    }
+
+    getHeader = () => {                 //metodo que extrae los campos de la data recibida
+        var keys = this.props.data;
+        this.keys = keys;
+        return keys.map((key, index)=>{
+        return <th key={key}>{key.toUpperCase()}</th>
+        })
+    }
+
+    agregar_datos = (array) => {        //metodo que recive toda la data y llama al metodo para insertar tuplas
+        if(array.length > 0)
+        {
+            for(var aux of array)
+                this.addRow(aux);
+        }
+	}
+
+    render() {
+        return (
+            <div>
+                <table className="table table-hover">
+                <thead><tr className="table-primary">{this.getHeader()}</tr></thead>
+                    <tbody>
+                        {
+                            this.state.rows.map((row, index) => { return <TableRow key={index} row={row} keys={this.keys} rowindex = {index + 1}></TableRow>} )
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+}
+
+export default Table
+```
+
