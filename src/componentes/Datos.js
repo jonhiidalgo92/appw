@@ -38,8 +38,13 @@ export default class Datos extends Component {
         this.peticionIT= this.peticionIT.bind(this);
         this.peticionCE= this.peticionCE.bind(this);
         this.peticiones_Range = this.peticiones_Range.bind(this);
-
+        this.updateRegion = this.updateRegion.bind(this);
         this.configuracion_Funnel = this.configuracion_Funnel.bind(this);
+
+        this.state5 = {
+            Region: '',
+            cantidad: 0
+        }
 
         this.state = {
             curTime : null
@@ -280,6 +285,7 @@ export default class Datos extends Component {
                         }
                     }
                 };
+
             })
         })
     }
@@ -330,6 +336,7 @@ export default class Datos extends Component {
         setInterval(this.peticionCE, 2000);
         setInterval(this.peticiones_Range, 2000);
         setInterval(this.configuracion_Funnel, 2000);
+        setInterval(this.updateRegion, 2000);
     }
 
     async updatePacientes() {
@@ -350,7 +357,8 @@ export default class Datos extends Component {
         await fetch('http://35.222.55.115:8080/region').then((res) => {
             res.json().then((result) => {
                 let stringify = JSON.parse(JSON.stringify(result))
-                console.log(stringify);
+                this.state5.Region = stringify[0].region;
+                this.state5.cantidad = stringify[0].total;
             })
         })
     }
@@ -362,7 +370,7 @@ export default class Datos extends Component {
                 <br/>
                 <div className="row">
                     <div className="col col-lg-4 col-md-12 col-sm-12">
-                        <div className="card border-primary mb-3" id="CEegiones">
+                        <div className="card border-primary mb-3" id="Integrantes">
                             <div className="card-header">
                                 <h1>Integrantes</h1>
                             </div>
@@ -390,18 +398,29 @@ export default class Datos extends Component {
                                 <strong><span className="badge badge-info">2021</span></strong>
                             </div>
                         </div>
+                        <div className="card border-primary mb-3" id="RegionM">
+                            <div className="card-header">
+                                <h2>Region con más infectados</h2>
+                            </div>
+                            <div className="card-body">
+                                <h1><strong>{this.state5.Region}</strong></h1>
+                                CANTIDAD DE INFECTADOS: <span className="badge badge-secondary">{this.state5.cantidad}</span>
+                            </div>
+                            <div className="card-footer text-right">
+                                <strong>Last Update on:</strong>&nbsp;<span className="badge badge-info">{this.state.curTime}</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="col col-lg-8 col-md-12 col-sm-12">
                         <div className="card border-primary mb-3" id="CEegiones">
                             <div className="card-header">
-                                <h1>Casos Infectados por InfectedType </h1>
+                                <h2>Casos Infectados por InfectedType </h2>
                             </div>
                             <div className="card-body">
                                 <Pie data={this.state1.data} opciones={this.state1.opciones}/>
                             </div>
                             <div className="card-footer text-right">
                                 <strong>Last Update on:</strong>&nbsp;<span className="badge badge-info">{this.state.curTime}</span>
-
                             </div>
                         </div>
                     </div>
@@ -410,7 +429,7 @@ export default class Datos extends Component {
                     <div className="col col-lg-6 col-md-6 col-sm-12">
                         <div className="card border-primary mb-3" id="top5Pacientes">
                             <div className="card-header">
-                                <h1>Top 5 Ultimos Casos Registrados</h1>
+                                <h2>Top 5 Ultimos Casos Registrados</h2>
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
@@ -425,7 +444,7 @@ export default class Datos extends Component {
                     <div className="col col-lg-6 col-md-6 col-sm-12">
                         <div className="card border-primary mb-3" id="IT">
                             <div className="card-header">
-                                <h1>Casos Infectados por State</h1>
+                                <h2>Casos Infectados por State</h2>
                             </div>
                             <div className="card-body">
                                 <Pie data={this.state2.data} opciones={this.state2.opciones}/>
@@ -440,7 +459,7 @@ export default class Datos extends Component {
                     <div className="col col-lg-12 col-md-12 col-sm-12">
                         <div className="card border-primary mb-3" id="RangoEdades">
                             <div className="card-header">
-                                <h1>Rango de Edades (Pacientes)</h1>
+                                <h2>Rango de Edades (Pacientes)</h2>
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
@@ -458,7 +477,7 @@ export default class Datos extends Component {
                     <div className="col col-lg-12 col-md-12 col-sm-12">
                         <div className="card border-primary mb-3" id="top5departamentosfunnel">
                             <div className="card-header">
-                                <h1>Top 5 departamentos infectados</h1>
+                                <h2>Top 5 departamentos infectados</h2>
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
