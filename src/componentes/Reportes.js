@@ -45,62 +45,77 @@ export default class Reportes extends Component {
         }
       }
     
-        componentDidMount() {
+        async componentDidMount() {
+          try {
             setInterval(this.updateChart, 3000);
             setInterval(this.updateChart2, 3000);
             setInterval(this.updateTable, 3000);
+          } catch (error) {
+            console.log("Errores de render");
+          }
+
         }
+
+        componentWillUnmount() {
+          clearInterval(this.updateChart);
+          clearInterval(this.updateChart2);
+          clearInterval(this.updateTable);
+      }
       
         async updateChart() {
-
-
-          
-
         await fetch("http://35.222.55.115:8080/ram").then((res)=>{
-          res.json().then((result)=>{
-            dps.push({x: xVal*3,y: result.uso});
-            xVal++;
-            if (dps.length >  10 ) {
-              dps.shift();
-            }
-            this.chart.render();
-            //this.setState({users:result})
-          })
-
-        })
-    
-    
+          try {
+            res.json().then((result)=>{
+              dps.push({x: xVal*3,y: result.uso});
+              xVal++;
+              if (dps.length >  10 ) {
+                dps.shift();
+              }
+              if(this.chart != undefined)
+                this.chart.render();
+            })
+          } catch (error) {
+            console.log("Error en el render");
+          }
+        }).catch(err => alert(err))
         }
     
         
 
         async updateChart2() {
         await fetch("http://35.222.55.115:8080/ram").then((res)=>{
-          res.json().then((result)=>{
-            for(let i = 0; i <= dpsp.length ; i++)
-            {
-              dpsp.pop();
-            }
-            dpsp.push({ y: 100 - result.porcentaje, label: "Free" });
-            dpsp.push({ y: result.porcentaje, label: "Used" });
-            this.chart2.render();
-            //this.setState({users:result})
-          })
-          
-        })
+          try {
+            res.json().then((result)=>{
+              for(let i = 0; i <= dpsp.length ; i++)
+              {
+                dpsp.pop();
+              }
+              dpsp.push({ y: 100 - result.porcentaje, label: "Free" });
+              dpsp.push({ y: result.porcentaje, label: "Used" });
+              if(this.chart2 != undefined)
+                this.chart2.render();
+            })
+          } catch (error) {
+            console.log("Error en el render");
+          }
+        }).catch(err => alert(err))
         }
     
       async updateTable(){
     
         await fetch("http://35.222.55.115:8080/procesos").then((res)=>{
-          res.json().then((result)=>{
-            let stringify = JSON.parse(JSON.stringify(result))
-            this.child1.current.removeRow();
-            this.child1.current.agregar_datos(stringify);
-            //this.chart2.render();
-            //this.setState({users:result})
-          })
-        })
+          try {
+            res.json().then((result)=>{
+              let stringify = JSON.parse(JSON.stringify(result))
+              if(this.child1.current != null)
+              {
+                this.child1.current.removeRow();
+                this.child1.current.agregar_datos(stringify);
+              }
+            })
+          } catch (error) {
+          }
+        }).catch(err => alert(err))
       }
 
       render () {

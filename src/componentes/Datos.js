@@ -103,7 +103,7 @@ export default class Datos extends Component {
                     this.configuracionG_IT();
                 }
             })
-        })
+        }).catch(err => alert(err))
     }
 
     //Generar Caracter de manera aleatoria
@@ -177,7 +177,7 @@ export default class Datos extends Component {
                     this.configuracionG_CE();
                 }
             })
-        })
+        }).catch(err => alert(err))
 
     }
 
@@ -287,7 +287,7 @@ export default class Datos extends Component {
                 };
 
             })
-        })
+        }).catch(err => alert(err))
     }
 
 
@@ -316,51 +316,67 @@ export default class Datos extends Component {
                         for(var i = 1; i < datap.length; i++) {
                             options.data[0].dataPoints[i].percentage = ((dataPoint[i].y / total) * 100).toFixed(2);
                         }
-                        this.chart.render();
+                        if(this.chart5 != undefined)
+                            this.chart5.render();
                     }
                 }
             )
-        })
+        }).catch(err => alert(err))
 
     }
 
 
-    componentDidMount() {
-        setInterval( () => {
-            this.setState({
-                curTime : new Date().toLocaleString()
-            })
-        },2000)
-        setInterval(this.updatePacientes,2000);
-        setInterval(this.peticionIT, 2000);
-        setInterval(this.peticionCE, 2000);
-        setInterval(this.peticiones_Range, 2000);
-        setInterval(this.configuracion_Funnel, 2000);
-        setInterval(this.updateRegion, 2000);
+    async componentDidMount() {
+        try {
+            setInterval( () => {
+                this.setState({
+                    curTime : new Date().toLocaleString()
+                })
+            },2000)
+            setInterval(this.updatePacientes,2000);
+            setInterval(this.peticionIT, 2000);
+            setInterval(this.peticionCE, 2000);
+            setInterval(this.peticiones_Range, 2000);
+            setInterval(this.configuracion_Funnel, 2000);
+            setInterval(this.updateRegion, 2000);
+        } catch (error) {
+            console.log("Errores de render");
+        }
+
+    }
+    componentWillUnmount() {
+        clearInterval(this.updatePacientes);
+        clearInterval(this.peticionIT);
+        clearInterval(this.peticionCE);
+        clearInterval(this.peticiones_Range);
+        clearInterval(this.configuracion_Funnel);
+        clearInterval(this.updateRegion);
     }
 
     async updatePacientes() {
-
         await fetch('http://35.222.55.115:8080/top5/pacientes').then((res) => {
             res.json().then((result) => {
                 let stringify = JSON.parse(JSON.stringify(result))
-                if(stringify.length>1)
+                if(stringify.length>1 && this.childPacientes1.current != null)
                 {
                     this.childPacientes1.current.agregar_datos(stringify);
                 }
 
             })
-        })
+        }).catch(err => alert(err))
     }
 
     async updateRegion() {
         await fetch('http://35.222.55.115:8080/region').then((res) => {
             res.json().then((result) => {
-                let stringify = JSON.parse(JSON.stringify(result))
-                this.state5.Region = stringify[0].region;
-                this.state5.cantidad = stringify[0].total;
+                if(result.length > 0)
+                {
+                    let stringify = JSON.parse(JSON.stringify(result))
+                    this.state5.Region = stringify[0].region;
+                    this.state5.cantidad = stringify[0].total;
+                }
             })
-        })
+        }).catch(err => alert(err))
     }
 
     render() {
@@ -481,7 +497,7 @@ export default class Datos extends Component {
                             </div>
                             <div className="card-body">
                                 <div className="table-responsive">
-                                    <CanvasJSChart options = {options} onRef={ref => this.chart = ref}/>
+                                    <CanvasJSChart options = {options} onRef={ref => this.chart5 = ref}/>
                                 </div>
                             </div>
                             <div className="card-footer text-right">
