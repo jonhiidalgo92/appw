@@ -46,7 +46,11 @@ class Table1 extends Component{
             this.setState({rows: []})
             for(var aux of array)
             {
-                if(aux.name != null)
+                if(aux.name != null && aux.name != ''
+                    && aux.age != null && aux.age != ''
+                    && aux.infectedtype != null && aux.infectedtype != ''
+                    && aux.location != null && aux.location != ''
+                    && aux.state != null && aux.state != '')
                 {
                     var temp = {
                         Paciente: aux.name,
