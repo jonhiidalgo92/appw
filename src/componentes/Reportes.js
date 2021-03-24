@@ -101,6 +101,8 @@ export default class Reportes extends Component {
         }).catch(err => alert(err))
         }
     
+
+        
       async updateTable(){
     
         await fetch("http://35.222.55.115:8080/procesos").then((res)=>{

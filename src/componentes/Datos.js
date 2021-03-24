@@ -30,6 +30,7 @@ const options = {
 
 
 export default class Datos extends Component {
+
     constructor(props) {
         super(props);
         this.childPacientes1 =  React.createRef();
@@ -250,6 +251,9 @@ export default class Datos extends Component {
         }
         this.state3.colores = coloresf;
     }
+    
+
+
 
     async peticiones_Range()
     {
@@ -278,6 +282,7 @@ export default class Datos extends Component {
                     labels: this.state3.edad,
                     datasets: [densityData]
                 };
+
                 this.state3.opciones = {
                     elements: {
                         rectangle: {
@@ -289,6 +294,9 @@ export default class Datos extends Component {
             })
         }).catch(err => alert(err))
     }
+
+
+
 
 
     async configuracion_Funnel(){
@@ -306,7 +314,6 @@ export default class Datos extends Component {
                         for(let i = 0; i <= initial ; i++)
                             datap.pop();
 
-
                         for(let i = 0 ; i < 5; i++)
                             datap.push({ y: this.state4.points[i].valor, label: "Ubicacion: "+this.state4.points[i].location +", Cantidad: "+this.state4.points[i].valor });
 
@@ -322,7 +329,6 @@ export default class Datos extends Component {
                 }
             )
         }).catch(err => alert(err))
-
     }
 
 
@@ -342,8 +348,9 @@ export default class Datos extends Component {
         } catch (error) {
             console.log("Errores de render");
         }
-
     }
+
+
     componentWillUnmount() {
         clearInterval(this.updatePacientes);
         clearInterval(this.peticionIT);
@@ -378,6 +385,7 @@ export default class Datos extends Component {
             })
         }).catch(err => alert(err))
     }
+
 
     render() {
         return(

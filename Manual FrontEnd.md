@@ -223,6 +223,95 @@ luego lo almacenamos  y seteamos la data.
 
 ## Desarrollo Gráfica de Barras
 
+
+* De igual manera utilizamos un objeto el cual va a contener arreglos con las caracteristicas necesarias para la grafica de barras.
+
+
+```
+
+        this.state3 ={
+            respuesta: [],        //este tendra los datos para el eje y
+            edad: [],             //este tendra los intervalos del eje x 
+            cantidad: [],         // este tendra la cantidad en cada intervalo
+            colores: [],          // aqui colocaremos los colores necesarios
+            data: [],             // aqui ira la data del aspecto de la grafica 
+            opciones: [],         // opciones otras 
+            type: 'bar'           // tipo de barra
+        }
+
+
+```
+
+* Esta es la peticion asincrona la cual va ejecutar la  peticion ala ruta especifica para traer los datos del servidor el  cual tiene unas caracteristicas. 
+
+
+
+
+
+
+```
+    async peticiones_Range()
+    {
+        await fetch('http://35.222.55.115:8080/Ages').then(res=>{      // Ruta  a la que se hace la peticion 
+
+
+            res.json().then(result=>                                   // lo que responda bamos a manipular su resultado 
+            {
+
+                let values = JSON.parse(JSON.stringify(result));       // parseamos a json el resultado para poder utilizar sus atributos
+                this.generarC_RE();                                    // generamos los colores  
+                if(values.length > 0) this.state3.respuesta = values;  // preguntamos si trae datos la respuesta
+                this.state3.edad = []                                  // inicializamos el arreglo de  edad
+                this.state3.cantidad = []                              // inicializamos el arreglo de cantidad
+
+
+                this.state3.respuesta.forEach(item=>                   // recorremos la respuesta 
+                {
+                    this.state3.cantidad.push(item.count)              // seteamos la cantidad de los datos de la respuesta almacenados anteriormente 
+                    this.state3.edad.push(item.legend)                 // seteamos los datos de la edad que estan en el arreglo almacenado
+                });
+
+
+                var densityData = {                                    // aqui tenemos la data 
+                    label: 'Edad de Pacientes',                        //el nombre del titulo
+                    data: this.state3.cantidad,                        // la cantidad del objeto en ese entonces
+                    backgroundColor: this.state3.colores,              // los colores que tenemos los cuales se iran modificando 
+                    borderColor: this.state3.colores,                  // los bordes que de igual manera se iran modificando 
+                    borderWidth: 2,                                    
+                    hoverBorderWidth: 0
+                };
+
+
+                this.state3.data = {
+                    labels: this.state3.edad,                          // colocamos los labels ala grafica
+                    datasets: [densityData]                            // tenemos los datos ya recolectados 
+                };
+
+
+
+                this.state3.opciones = {                               // ahora reyenamos las opciones de los elementos
+                    elements: {                                        // tenemos que los elementos 
+                        rectangle: {                                   // de tipo rectangulo 
+                            borderSkipped: 'left',
+                        }
+                    }
+
+                };
+
+
+
+
+            })
+        }).catch(err => alert(err))                                    // capturamos el error si  existiera
+    }
+
+```
+
+
+
+
+
+
 ## Desarrollo Gráfica de Funnel
 Para la implementacion de la gráfica funnel necesitamos definir sus parametros de configuracion:
  ```
